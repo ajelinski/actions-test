@@ -7,16 +7,25 @@ The ``conda-build-prepare`` tool creates almost completely fixed package recipe,
 
 It also extracts data from the repository containing the recipe and populates the ``recipe_append.yaml`` file, which is automatically added to the metadata (as of ``conda-build`` v3.0).
 
-After running the tool, to build the package in the prepared environment, run::
+After installing ``conda-build-prepare`` (with ``setup.py``) or cloning the repository and changing the directory to the repository root, run:
 
-  conda activate $DIRECTORY/conda-env
-  conda build $DIRECTORY/recipe
+.. code-block:: bash
+   :name: prepare_package
 
-or::
+   python3 -m conda_build_prepare --dir $DIRECTORY $PACKAGE
 
-  conda run -p $DIRECTORY/conda-env conda build $DIRECTORY/recipe
+to prepare the *PACKAGE* recipe and store output files in a *DIRECTORY*.
 
-(``$DIRECTORY`` is the argument passed to the ``conda-build-prepare`` using ``--out``).
+After running the tool, to build the package using the prepared environment and recipe (restoring current environment afterwards), run:
+
+.. code-block:: bash
+   :name: build_package
+
+   conda activate $DIRECTORY/conda-env
+   conda build $DIRECTORY/recipe
+   conda deactivate
+
+where *DIRECTORY* can be virtually any name but it has to be the same as ``--dir`` argument passed while preparing the package.
 
 Stages of preparation:
 
@@ -31,13 +40,13 @@ Stages of preparation:
 Options::
 
     package_dir         Path to the directory containing ``meta.yaml`` of the package
-    --out=DIRECTORY     Use DIRECTORY to store generated files on which ``conda build`` should be run
+    --dir=DIRECTORY     Use DIRECTORY to store generated files on which ``conda build`` should be run
     -v, --verbose       Add more verbosity to output
 
 Preparing the working directory
 -------------------------------
 
-The ``--out`` parameter value (``$DIRECTORY``) is used as a target directory name, in which ``conda-env``, ``git-repos`` and ``recipe`` directories will be created.
+The ``--dir`` parameter value (``$DIRECTORY``) is used as a target directory name, in which ``conda-env``, ``git-repos`` and ``recipe`` directories will be created.
 The directory specified as a ``package_dir`` will be copied as the ``$DIRECTORY/recipe`` directory.
 
 While all packages are expected to have a ``meta.yaml``, the ``prescript.${TOOLCHAIN_ARCH}.sh`` can be used to download or generate it.
@@ -119,21 +128,14 @@ If environment already has those variables set, the embedded variables will repl
 
 If during this stage there are some ``script_env`` variables not set with any value in the environment, they will be removed from the ``script_env`` to never influence building this package.
 
-Building example package
-------------------------
+Building the example package
+----------------------------
 
-Using ``test/wishbone-tool`` as an example recipe and ``workdir`` as output directory name (it can be any name), the package can be prepared with:
+``wishbone-tool`` recipe is included for testing in this repository under the ``test`` directory. The package can be successfully built with the code presented at the beginning of the *README* after setting the ``PACKAGE`` and ``DIRECTORY`` values in shell:
 
-.. code-block:: bash
-   :name: prepare_wishbone
-
-   python3 -m conda_build_prepare --dir workdir test/wishbone-tool
-
-After such preparation all that's left is using the ``workdir/conda-env`` conda environment and build prepared recipe from ``workdir/recipe``:
 
 .. code-block:: bash
-   :name: build_wishbone
+   :name: set_envs
 
-   conda activate workdir/conda-env
-   conda build workdir/recipe
-   #conda run -p workdir/conda-env conda build workdir/recipe
+   PACKAGE=test/wishbone-tool
+   DIRECTORY=some-nice-name
