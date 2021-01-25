@@ -14,7 +14,7 @@ runs:
     shell: bash
     run: |
       echo 1
-      echo ${{ inputs.branch_name }}
+      echo "xyz${{ inputs.branch_name }}abc"
       echo 2
       echo ${{ inputs.name }}
       echo 3

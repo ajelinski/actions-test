@@ -30,7 +30,11 @@ jobs:
       - name: Test Variables
         run: |
           echo 1
-          echo ${{ github.event.inputs.branch_name }}
+          if [ "${{ github.event.inputs.branch_name }}" = "" ]; then
+            echo EMPTY
+          else
+            echo "${{ github.event.inputs.branch_name }}"
+          fi
           echo 2
           echo ${{ github.event.inputs.name }}
           echo 3
