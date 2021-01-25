@@ -16,5 +16,5 @@ runs:
       echo 1
       echo "xyz${{ inputs.branch_name }}abc"
       echo 2
-      echo ${{ inputs.name }}
+      echo "xyz${{ inputs.name }}abc"
       echo 3

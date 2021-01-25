@@ -26,6 +26,8 @@ jobs:
 
       - name: Test Variables Action
         uses: ./action
+        with:
+          name: ''
 
       - name: Test Variables
         run: |
